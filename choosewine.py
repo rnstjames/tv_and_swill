@@ -7,7 +7,6 @@ class TVProgram:
     def __init__(self):
         self.title, self.json = TVProgram.get_program()
         self.genres = self.json["Genre"].split(", ")
-        print(self.genres)
         self.plot = self.json["Plot"]
 
     def get_program():
