@@ -2,10 +2,6 @@ import math
 import data
 import requests
 
-import math
-import data
-import requests
-
 class TVProgram:
 
     def __init__(self):
