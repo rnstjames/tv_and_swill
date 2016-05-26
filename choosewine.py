@@ -1,37 +1,60 @@
-# TODO: Need comments
-# Need to organize code better beyond trial stages
-# Need to allow user to enter movie name
-
-
+import math
+import data
+import requests
 
 import math
 import data
 import requests
 
-movie_title = "Sesame Street"
-response = requests.get("http://www.omdbapi.com/?t=" + movie_title + "&y=&plot=short+r=json")
-movie_genres = response.json()["Genre"].split(", ")
+class TVProgram:
 
-wine_vector = [0] * len(data.genres)
-for genre in movie_genres:
-    wine_vector[data.genres.index(genre)] = 1
+    def __init__(self):
+        self.title, self.json = TVProgram.get_program()
+        self.genres = self.json["Genre"].split(", ")
+        print(self.genres)
+        self.plot = self.json["Plot"]
 
-def cosine_similarity(v1,v2):
-    "compute cosine similarity of v1 to v2: (v1 dot v2)/{||v1||*||v2||)"
-    sumxx, sumxy, sumyy = 0, 0, 0
-    for i in range(len(v1)):
-        x = v1[i]; y = v2[i]
-        sumxx += x*x
-        sumyy += y*y
-        sumxy += x*y
-    return sumxy/math.sqrt(sumxx*sumyy)
+    def get_program():
+        title = input("Enter a movie or TV show title for wine pairing: ")
+        response = requests.get("http://www.omdbapi.com/?t=" + title + "&y=&plot=short+r=json")
+        return title, response.json()
 
-top_wine = ["", 0]
-for entry in data.wine_dict.items():
-    print(entry[0])
-    print(cosine_similarity(entry[1], wine_vector))
-    if cosine_similarity(entry[1], wine_vector) > top_wine[1]:
-        top_wine[0] = entry[0]
-        top_wine[1] = cosine_similarity(entry[1], wine_vector)
 
-print(top_wine)
+class WinePairer:
+
+    def __init__(self, genres_list, wine_vectors, program):
+        self.genres = genres_list
+        self.wine_vectors = wine_vectors
+        self.program = program
+        self.program_vector = self.initialize_vector()
+        
+        
+    def initialize_vector(self):
+        program_vector = [0] * len(self.genres)
+        for genre in program.genres:
+            program_vector[self.genres.index(genre)] = 1
+        return program_vector
+
+    def cosine_similarity(v1,v2):
+        "compute cosine similarity of v1 to v2: (v1 dot v2)/{||v1||*||v2||)"
+        sumxx, sumxy, sumyy = 0, 0, 0
+        for i in range(len(v1)):
+            x = v1[i]; y = v2[i]
+            sumxx += x*x
+            sumyy += y*y
+            sumxy += x*y
+        return sumxy/math.sqrt(sumxx*sumyy)
+
+    def calculate_top_wine(self):
+        top_wine = ["", 0]
+        for entry in self.wine_vectors.items():
+            if WinePairer.cosine_similarity(entry[1], self.program_vector) > top_wine[1]:
+                top_wine[0] = entry[0]
+                top_wine[1] = WinePairer.cosine_similarity(entry[1], self.program_vector)
+        return top_wine[0]
+
+if __name__ == "__main__":
+    program = TVProgram()
+    wp = WinePairer(data.genres, data.wine_dict, program)
+    print(program.title + " pairs best with " + wp.calculate_top_wine() + ".")
+
