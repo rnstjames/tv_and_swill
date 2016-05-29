@@ -14,9 +14,7 @@ with open(filename) as f:
         line = line.strip("\n").split(",")
         wine_dict[line[0]] = [float(x) for x in line[1:]]
         
-write_file = input("Enter a file to write to: ")
-
-with open("wine_data.py", "w") as f2:
+with open("data.py", "w") as f2:
     f2.write("genre = ")
     len_list = len(genres)
     f2.write("[\n")
