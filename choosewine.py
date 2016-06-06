@@ -12,7 +12,10 @@ class TVProgram:
     def get_program():
         title = input("Enter a movie or TV show title for wine pairing: ")
         response = requests.get("http://www.omdbapi.com/?t=" + title + "&y=&plot=short+r=json")
-        return title, response.json()
+        if response.json()["Response"]:
+            return title, response.json()
+        else:
+            print("Something went wrong. Try again.")
 
 
 class WinePairer:
