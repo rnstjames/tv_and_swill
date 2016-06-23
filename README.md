@@ -11,7 +11,7 @@ TV and Swill uses the magic of linear algebra and vector representations to pair
 - Sauvignon Blanc
 - Pinot Grigio
 - Riesling
-- Vinho Verde
+- Rosé
 - Cabernet Sauvignon
 
 Each wine is encoded as a 26-dimension vector in a wine/genre matrix, where each dimension reflects an IMDB genre of movie or television show. Each wine gets assigned a probability that it pairs best with that genre. These probabilities were assigned heuristically based on my own pairing intuitions, with the hope to eventually use polls of users and user suggestions to tweak these values.
